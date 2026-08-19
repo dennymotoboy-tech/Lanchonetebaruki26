@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#e74c3c',
+                secondary: '#f39c12',
+                accent: '#f1c40f',
+                success: '#27ae60',
+                dark: '#2c3e50',
+                fundo: '#fff3e0',
+                whats: '#25d366',
+                promo: '#ff3d00',
+            },
+            fontFamily: {
+                sans: ['Arial', 'sans-serif'],
+            }
+        }
+    }
+}
+</script>
+
+<style type="text/tailwindcss">
+@layer utilities {
+
+    .content-auto {
+        content-visibility: auto;
+    }
+
+    .btn-cat {
+        @apply py-3 px-2 flex flex-col items-center justify-center transition-all duration-200 border-b-4 border-transparent;
+        transform: scale(1);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        cursor: pointer;
+    }
+
+    .btn-cat:hover {
+        @apply bg-gray-50/80;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .btn-cat:active {
+        transform: scale(0.95) translateY(0);
+    }
+
+    .btn-cat.active {
+        @apply bg-primary/10 border-primary text-primary font-bold;
+        transform: scale(1.02);
+    }
+
+    .item-card {
+        @apply bg-gray-800 rounded-xl shadow-md p-4 mb-4 border border-gray-700;
+    }
+
+    .btn-qty {
+        @apply w-9 h-9 rounded-full bg-black hover:bg-gray-900 text-white flex items-center justify-center font-bold text-lg;
+    }
+
+    .btn-add {
+        @apply bg-success hover:bg-success/90 text-white font-bold py-2 px-4 rounded-lg transition-all;
+    }
+
+    .popup {
+        @apply fixed top-20 left-1/2 -translate-x-1/2 bg-success text-white px-6 py-3 rounded-xl shadow-2xl z-50 text-base font-bold opacity-0 pointer-events-none transition-opacity duration-300 max-w-[90%] text-center;
+    }
+
+    .popup.show {
+        @apply opacity-100 pointer-events-auto;
+    }
+
+    .popup.alerta {
+        @apply bg-red-500;
+    }
+
+    .screen {
+        @apply hidden;
+    }
+
+    .screen.active {
+        @apply block;
+    }
+
+    .input-field {
+        @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 bg-gray-50 text-gray-900;
+    }
+
+    .input-field.invalido {
+        @apply border-red-500 bg-red-50;
+    }
+
+    .btn-action {
+        @apply w-full py-3 rounded-lg font-bold text-white transition-all;
+    }
+
+    .cart-badge {
+        @apply absolute -top-1 -right-1 bg-accent text-dark w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold;
+    }
+
+    .scroll-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    .scroll-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .item-title {
+        @apply text-yellow-400 font-bold text-lg;
+    }
+
+    .item-desc {
+        @apply text-gray-300 text-sm mt-1;
+    }
+
+    .tamanho-label {
+        @apply text-gray-200;
+    }
+
+    .preco-p {
+        color: #22c55e;
+    }
+
+    .preco-g {
+        color: #3b82f6;
+    }
+
+    .whatsapp-float {
+        @apply fixed bottom-5 right-5 z-50 bg-whats text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform duration-200;
+        animation: whatsPulse 2s infinite;
+    }
+
+    .promo-float {
+        @apply fixed bottom-24 right-5 z-50 bg-promo text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform duration-200;
+        animation: promoPulse 1.5s infinite;
+    }
+
+    @keyframes whatsPulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(37,211,102,.5);
+        }
+        70% {
+            box-shadow: 0 0 0 12px rgba(37,211,102,0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(37,211,102,0);
+        }
+    }
+
+    @keyframes promoPulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(255,61,0,.6);
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.08);
+        }
+        70% {
+            box-shadow: 0 0 0 15px rgba(255,61,0,0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(255,61,0,0);
+            transform: scale(1);
+        }
+    }
+
+    .modal-promo {
+        @apply fixed inset-0 z-[60] flex items-center justify-center bg-black/70 opacity-0 pointer-events-none transition-opacity duration-300 p-4;
+    }
+
+    .modal-promo.show {
+        @apply opacity-100 pointer-events-auto;
+    }
+
+    .modal-content {
+        @apply bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl;
+    }
+
+    .card-promo {
+        @apply bg-gradient-to-br from-secondary/10 to-primary/10 border border-secondary/20 rounded-xl p-4 mb-3;
+    }
+}
+
+body.tema-claro {
+    background: #fff3e0 !important;
+    color: #2c3e50 !important;
+}
+
+body.tema-claro .bg-gray-900 {
+    background-color: #fff3e0 !important;
+}
+
+body.tema-claro .bg-gray-800 {
+    background-color: #ffffff !important;
+    color: #2c3e50 !important;
+}
+
+body.tema-claro .bg-gray-700 {
+    background-color: #f3f4f6 !important;
+}
+
+body.tema-claro .border-gray-700 {
+    border-color: #e5e7eb !important;
+}
+
+body.tema-claro .text-white {
+    color: #2c3e50 !important;
+}
+
+body.tema-claro .text-gray-300 {
+    color: #4b5563 !important;
+}
+
+body.tema-claro .text-gray-400 {
+    color: #6b7280 !important;
+}
+
+body.tema-claro .item-card {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+body.tema-claro .btn-cat {
+    color: #2c3e50 !important;
+}
+
+body.tema-claro .btn-cat.active {
+    color: #e74c3c !important;
+    background: rgba(231,76,60,.10) !important;
+}
+
+body.tema-claro .input-field {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+}
+
+body.tema-claro .modal-content {
+    background: #ffffff !important;
+}
+
+body.tema-claro .card-promo {
+    background: linear-gradient(
+        135deg,
+        rgba(243,156,18,.12),
+        rgba(231,76,60,.12)
+    ) !important;
+}
+
+body.tema-claro .text-yellow-400 {
+    color: #d97706 !important;
+}
+
+.btn-tema {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #374151;
+    color: white;
+    font-size: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,.25);
+    transition: .25s;
+    z-index: 20;
+}
+
+.btn-tema:active {
+    transform: scale(.90);
+}
+
+body.tema-claro .btn-tema {
+    background: #f59e0b;
+    color: white;
+}
+</style>
+</head>
+
+<body class="bg-gray-900 font-sans text-white">
+
+<div id="popup" class="popup">
+    Adicionado ✅
+</div>
+
+<div id="modal-promo"
+     class="modal-promo"
+     onclick="fecharPromoFora(event)">
+
+    <div class="modal-content"
+         onclick="event.stopPropagation()">
+
+        <div class="sticky top-0 bg-white p-4 border-b flex justify-between items-center z-10">
+
+            <h2 class="text-xl font-bold text-primary flex items-center gap-2">
+                <i class="fa fa-fire"></i>
+                Promoções do Dia
+            </h2>
+
+            <button onclick="fecharPromo()"
+                    class="text-gray-500 text-xl">
+                <i class="fa fa-times"></i>
+            </button>
+
+        </div>
+
+        <div class="p-4">
+
+            <div class="card-promo">
+                <h3 class="font-bold text-lg">🔥 Combo Família</h3>
+                <p class="text-gray-700 mt-1">
+                    2 X-Burguer + 1 Batata Grande + 2 Refrigerantes
+                </p>
+                <p class="text-lg font-bold text-success mt-2">
+                    De R$ 85,00 por
+                    <span class="text-primary">R$ 65,00</span>
+                </p>
+            </div>
+
+            <div class="card-promo">
+                <h3 class="font-bold text-lg">🍔 X-Burguer Duplo</h3>
+                <p class="text-gray-700 mt-1">
+                    Ingredientes selecionados e carne artesanal
+                </p>
+                <p class="text-lg font-bold text-success mt-2">
+                    Economize R$ 5,00!
+                    <span class="text-primary">R$ 19,90</span>
+                </p>
+            </div>
+
+            <div class="card-promo">
+                <h3 class="font-bold text-lg">🥤 Bebida em Dobro</h3>
+                <p class="text-gray-700 mt-1">
+                    Compre qualquer lanche e leve 2 refris por R$ 5,00
+                </p>
+            </div>
+
+            <div class="mt-4 text-center text-gray-600 text-sm">
+                <p>📞 Peça já pelo WhatsApp!</p>
+                <p class="font-semibold">
+                    Promoções válidas por tempo limitado
+                </p>
+            </div>
+
+            <button onclick="fecharPromo();showScreen('cardapio')"
+                    class="w-full mt-4 bg-secondary text-white font-bold py-3 rounded-xl">
+                Ver Cardápio Completo
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<header class="bg-orange-500 py-6 px-4 relative">
+
+    <button
+        id="btn-tema"
+        class="btn-tema absolute top-4 right-4"
+        onclick="alternarTema()"
+        title="Alternar tema">
+
+        <i id="icone-tema"
+           class="fa fa-moon-o"></i>
+    </button>
+
+    <div class="max-w-2xl mx-auto text-center">
+
+        <h1 class="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2">
+            <span>🍕</span>
+            LANCHONETE BARUKI
+        </h1>
+
+        <p class="mt-2 text-white/90">
+            Faça seu pedido com mais rapidez, Envie diretamente para o WhatsApp 
+        </p>
+
+    </div>
+</header>
+
+<div class="bg-gray-900 border-b border-gray-700 px-4 py-3">
+
+    <div class="max-w-2xl mx-auto flex justify-center gap-3">
+
+        <button
+            onclick="abrirPromo()"
+            title="Promoções"
+            class="bg-promo text-white px-5 py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform">
+
+            <i class="fa fa-bolt text-xl"></i>
+
+            <span class="font-bold">
+                Promoções
+            </span>
+
+        </button>
+
+        <a
+            href="https://wa.me/5544997232744"
+            target="_blank"
+            title="Atendimento WhatsApp"
+            class="bg-whats text-white px-5 py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform">
+
+            <i class="fa fa-whatsapp text-xl"></i>
+
+            <span class="font-bold">
+                WhatsApp
+            </span>
+
+        </a>
+
+    </div>
+</div>
+
+<div class="sticky top-0 z-40 bg-gray-800 shadow-md px-4 py-3 flex justify-between items-center">
+
+    <button onclick="showScreen('cardapio')"
+            class="font-bold text-lg">
+
+        <i class="fa fa-arrow-left mr-2"
+           id="btn-voltar"
+           style="display:none"></i>
+
+        Cardápio 📋
+    </button>
+
+    <button onclick="showScreen('carrinho')"
+            class="relative flex items-center gap-2 bg-gray-700/70 px-4 py-2 rounded-full">
+
+        <i class="fa fa-shopping-cart text-xl"></i>
+
+        <span class="font-bold">
+            Carrinho
+        </span>
+
+        <span id="cart-count"
+              class="cart-badge">
+            0
+        </span>
+
+    </button>
+</div>
+
+<div id="tela-cardapio"
+     class="screen active">
+
+    <nav class="flex overflow-x-auto scroll-hide bg-gray-800 border-b border-gray-700 sticky top-[60px] z-30">
+
+        <button class="btn-cat text-white active min-w-[16.6%]"
+                data-cat="lanches"
+                onclick="mostrarCategoria('lanches', this)">
+            🍔
+            <span class="text-xs mt-1">Lanches</span>
+        </button>
+
+        <button class="btn-cat text-white min-w-[16.6%]"
+                data-cat="porcoes"
+                onclick="mostrarCategoria('porcoes', this)">
+            🍟
+            <span class="text-xs mt-1">Porções</span>
+        </button>
+
+        <button class="btn-cat text-white min-w-[16.6%]"
+                data-cat="pastel"
+                onclick="mostrarCategoria('pastel', this)">
+            🥟
+            <span class="text-xs mt-1">Pastéis</span>
+        </button>
+
+        <button class="btn-cat text-white min-w-[16.6%]"
+                data-cat="bebidas"
+                onclick="mostrarCategoria('bebidas', this)">
+            🥤
+            <span class="text-xs mt-1">Bebidas</span>
+        </button>
+
+        <button class="btn-cat text-white min-w-[16.6%]"
+                data-cat="pizza"
+                onclick="mostrarCategoria('pizza', this)">
+            🍕
+            <span class="text-xs mt-1">Pizza</span>
+        </button>
+
+        <button class="btn-cat text-white min-w-[16.6%]"
+                data-cat="cachorrao"
+                onclick="mostrarCategoria('cachorrao', this)">
+            🌭
+            <span class="text-xs mt-1">Cachorrão</span>
+        </button>
+
+    </nav>
+
+    <main class="p-4 max-w-2xl mx-auto">
+        <div id="lista-produtos"></div>
+    </main>
+
+</div>
+
+<div id="tela-carrinho"
+     class="screen p-4 max-w-2xl mx-auto">
+
+    <h2 class="text-xl font-bold mb-4">
+        Meu Pedido
+    </h2>
+
+    <div id="itens-carrinho"></div>
+
+    <div class="mt-4 p-4 bg-gray-800 rounded-xl shadow space-y-2">
+
+        <div class="flex justify-between text-gray-300">
+            <span>Subtotal:</span>
+            <span id="subtotal">R$ 0,00</span>
+        </div>
+
+        <div class="flex justify-between text-gray-300">
+            <span>Taxa de Entrega:</span>
+            <span id="valor-entrega">R$ 0,00</span>
+        </div>
+
+        <div class="flex justify-between text-xl font-bold border-t border-gray-700 pt-2">
+            <span>TOTAL:</span>
+            <span id="valor-total">R$ 0,00</span>
+        </div>
+
+    </div>
+
+    <button id="btn-continuar"
+            onclick="showScreen('pagamento')"
+            disabled
+            class="btn-action bg-gray-600 mt-4">
+        Continuar
+    </button>
+
+</div>
+
+<div id="tela-pagamento"
+     class="screen p-4 max-w-2xl mx-auto">
+
+    <h2 class="text-xl font-bold mb-4">
+        Forma de Pagamento
+    </h2>
+
+    <div class="grid gap-3 mb-6">
+
+        <label class="flex items-center gap-3 bg-gray-800 p-3 rounded-lg shadow cursor-pointer">
+            <input type="radio"
+                   name="pagamento"
+                   value="PIX"
+                   checked
+                   onchange="atualizarPagamento()">
+            PIX
+        </label>
+
+        <label class="flex items-center gap-3 bg-gray-800 p-3 rounded-lg shadow cursor-pointer">
+            <input type="radio"
+                   name="pagamento"
+                   value="Cartão"
+                   onchange="atualizarPagamento()">
+            Débito / Crédito
+        </label>
+
+        <label class="flex items-center gap-3 bg-gray-800 p-3 rounded-lg shadow cursor-pointer">
+            <input type="radio"
+                   name="pagamento"
+                   value="Dinheiro"
+                   onchange="atualizarPagamento()">
+            Dinheiro
+        </label>
+
+    </div>
+
+    <div id="campo-troco"
+         class="hidden mb-6 bg-gray-800 p-4 rounded-xl shadow">
+
+        <label class="block mb-2 font-semibold">
+            Valor Recebido (R$)
+        </label>
+
+        <input type="number"
+               id="valor-recebido"
+               step="0.01"
+               min="0"
+               class="input-field"
+               oninput="calcularTroco()">
+
+        <p class="mt-2">
+            Troco:
+            <strong id="valor-troco">
+                R$ 0,00
+            </strong>
+        </p>
+
+    </div>
+
+    <h2 class="text-xl font-bold mb-4">
+        Tipo de Entrega
+    </h2>
+
+    <div class="grid gap-3 mb-6">
+
+        <label class="flex items-center gap-3 bg-gray-800 p-3 rounded-lg shadow cursor-pointer">
+
+            <input type="radio"
+                   name="entrega"
+                   value="Retirada"
+                   checked
+                   onchange="atualizarEntrega()">
+
+            Retirada no local
+
+            <span class="ml-auto font-bold">
+                Grátis
+            </span>
+
+        </label>
+
+        <label class="flex items-center gap-3 bg-gray-800 p-3 rounded-lg shadow cursor-pointer">
+
+            <input type="radio"
+                   name="entrega"
+                   value="Floriano"
+                   onchange="atualizarEntrega()">
+
+            Entrega - Floriano
+
+            <span class="ml-auto font-bold">
+                R$ 5,00
+            </span>
+
+        </label>
+
+        <label class="flex items-center gap-3 bg-gray-800 p-3 rounded-lg shadow cursor-pointer">
+
+            <input type="radio"
+                   name="entrega"
+                   value="Nova Floresta"
+                   onchange="atualizarEntrega()">
+
+            Entrega - Nova Floresta
+
+            <span class="ml-auto font-bold">
+                R$ 10,00
+            </span>
+
+        </label>
+
+    </div>
+
+    <h2 class="text-xl font-bold mb-4">
+        Dados do Cliente
+    </h2>
+
+    <div class="grid gap-4 mb-6">
+
+        <input type="text"
+               id="cliente-nome"
+               placeholder="Seu nome completo"
+               class="input-field"
+               oninput="validarFinalizar()">
+
+        <input type="text"
+               id="cliente-endereco"
+               placeholder="Endereço completo"
+               class="input-field"
+               oninput="validarFinalizar()">
+
+    </div>
+
+    <div class="bg-gray-800 p-4 rounded-xl shadow mb-6 space-y-2">
+
+        <div class="flex justify-between text-gray-300">
+            <span>Subtotal:</span>
+            <span id="res-subtotal">R$ 0,00</span>
+        </div>
+
+        <div class="flex justify-between text-gray-300">
+            <span>Entrega:</span>
+            <span id="res-entrega">R$ 0,00</span>
+        </div>
+
+        <div class="flex justify-between text-xl font-bold border-t border-gray-700 pt-2">
+            <span>TOTAL FINAL:</span>
+            <span id="res-total">R$ 0,00</span>
+        </div>
+
+    </div>
+
+    <button id="btn-finalizar"
+            onclick="enviarWhatsApp()"
+            disabled
+            class="btn-action bg-primary">
+
+        Finalizar Pedido no WhatsApp 📲
+
+    </button>
+
+</div>
+
+<script>
+
+const cardapioOriginal = {
+
+    lanches: [
+
+        {
+            nome:"X-BURGUER",
+            desc:"Pao + hambúrguer + presunto + mussarela",
+            preco:18.00,
+            podeRemover:["presunto","mussarela","hambúrguer"]
+        },
+
+        {
+            nome:"X-SALADA",
+            desc:"Pao + hambúrguer + presunto + mussarela + tomate + alface",
+            preco:20.00,
+            podeRemover:["presunto","mussarela","hambúrguer","tomate","alface"]
+        },
+
+        {
+            nome:"X-BURGUER DUPLO",
+            desc:"Pao + 2 hambúrguer + presunto + mussarela",
+            preco:24.00,
+            podeRemover:["presunto","mussarela","hambúrguer"]
+        },
+
+        {
+            nome:"X-BACON",
+            desc:"Pao + hambúrguer + presunto + mussarela + bacon + tomate + alface",
+            preco:27.00,
+            podeRemover:["presunto","mussarela","hambúrguer","bacon","tomate","alface"]
+        },
+
+        {
+            nome:"X-FRANGO",
+            desc:"Pao + hambúrguer + presunto + mussarela + frango + tomate + alface",
+            preco:27.00,
+            podeRemover:["presunto","mussarela","hambúrguer","frango","tomate","alface"]
+        },
+
+        {
+            nome:"X-CALABRESA",
+            desc:"Pao + hambúrguer + presunto + mussarela + calabresa + tomate + alface",
+            preco:27.00,
+            podeRemover:["presunto","mussarela","hambúrguer","calabresa","tomate","alface"]
+        },
+
+        {
+            nome:"X-EGG",
+            desc:"Pao + hambúrguer + presunto + mussarela + ovo + tomate + alface",
+            preco:27.00,
+            podeRemover:["presunto","mussarela","hambúrguer","ovo","tomate","alface"]
+        },
+
+        {
+            nome:"X-ALCATRA",
+            desc:"Pao + hambúrguer + presunto + mussarela + alcatra + cebola + tomate + alface",
+            preco:38.00,
+            podeRemover:["presunto","mussarela","hambúrguer","alcatra","cebola","tomate","alface"]
+        },
+
+        {
+            nome:"X-FILE DE FRANGO",
+            desc:"Pao + hambúrguer + presunto + mussarela + tomate + alface + filé de frango",
+            preco:38.00,
+            podeRemover:["presunto","mussarela","hambúrguer","tomate","alface","filé de frango"]
+        },
+
+        {
+            nome:"X-TUDO",
+            desc:"Pao + hambúrguer + presunto + mussarela + alcatra + tomate + alface + ovo + calabresa + frango + bacon",
+            preco:45.00,
+            podeRemover:["presunto","mussarela","hambúrguer","alcatra","tomate","alface","ovo","calabresa","frango","bacon"]
+        },
+
+        {
+            nome:"X-BARUKI",
+            desc:"Pao + hambúrguer + presunto + mussarela + tomate + alface + milho + calabresa + bacon + salsicha + batata palha + ovo",
+            preco:48.00,
+            podeRemover:["presunto","mussarela","hambúrguer","tomate","alface","milho","calabresa","bacon","salsicha","batata palha","ovo"]
+        }
+
+    ],
+
+    porcoes: [
+        {nome:"MANDIOCA",preco:25.00},
+        {nome:"POLENTA",preco:25.00},
+        {nome:"BATATA FRITA",preco:28.00},
+        {nome:"ANÉIS DE CEBOLA",preco:28.00},
+        {nome:"CALABRESA",preco:38.00},
+        {nome:"BATATA FRITA C/ CHEDDAR E BACON",preco:38.00},
+        {nome:"BATATA FRITA C/ QUEIJO E BACON",preco:38.00},
+        {nome:"FRANGO A PASSARINHO",preco:40.00},
+        {
+            nome:"FRIOS",
+            desc:"(MUSSARELA, PRESUNTO, SALAME, AZEITONA E OVO DE CODORNA)",
+            preco:45.00
+        },
+        {nome:"ALCATRA ACEBOLADA",preco:45.00},
+        {nome:"COSTELINHA DE PORCO C/ MANDIOCA",preco:45.00}
+    ],
+
+    pastel: [
+        {
+            nome:"Doce",
+            desc:"Chocolate, Chocolate Branco, Prestígio, Sonho de Valsa ou Ouro Branco",
+            preco:10.00
+        },
+        {
+            nome:"Simples",
+            desc:"Carne, Frango, Queijo ou Pizza",
+            preco:12.00
+        },
+        {nome:"Dois Sabores - Mini Ovo",preco:15.00},
+        {nome:"Dois Sabores - Carne c/ Queijo",preco:15.00},
+        {nome:"Dois Sabores - Carne c/ Azeitona",preco:15.00},
+        {nome:"Dois Sabores - Carne c/ Cheddar ou Catupiry",preco:15.00},
+        {nome:"Dois Sabores - Carne Seca c/ Catupiry",preco:15.00},
+        {nome:"Dois Sabores - Frango c/ Catupiry ou Cheddar",preco:15.00},
+        {nome:"Dois Sabores - Frango c/ Queijo",preco:15.00},
+        {nome:"Dois Sabores - Frango c/ Palmito",preco:15.00},
+        {nome:"Dois Sabores - Frango c/ Bacon",preco:15.00},
+        {nome:"Dois Sabores - Palmito c/ Queijo",preco:15.00},
+        {nome:"Dois Sabores - Calabresa c/ Queijo",preco:15.00},
+        {
+            nome:"Super Especial - 4 Queijos",
+            desc:"Mussarela, Prato, Parmesão e Provolone",
+            preco:18.00
+        },
+        {
+            nome:"Super Especial - Carne",
+            desc:"Carne moída, Bacon, Mussarela e Azeitona",
+            preco:18.00
+        },
+        {
+            nome:"Super Especial - Frango",
+            desc:"Frango, Bacon, Mussarela e Catupiry",
+            preco:18.00
+        },
+        {
+            nome:"Super Especial - Portuguesa",
+            desc:"Presunto, Mussarela, Cebola, Tomate, Ovo e Orégano",
+            preco:18.00
+        }
+    ],
+
+    cachorrao: [
+
+        {
+            nome:"SIMPLES",
+            desc:"Pão + salsicha + tomate + milho + ervilha + batata palha",
+            preco:14.00,
+            podeRemover:["salsicha","tomate","milho","ervilha","batata palha"]
+        },
+
+        {
+            nome:"DUPLO",
+            desc:"Pão + 2 salsicha + tomate + milho + ervilha + batata palha",
+            preco:16.00,
+            podeRemover:["salsicha","tomate","milho","ervilha","batata palha"]
+        },
+
+        {
+            nome:"BACON",
+            desc:"Pão + salsicha + tomate + milho + ervilha + bacon + batata palha",
+            preco:22.00,
+            podeRemover:["salsicha","tomate","milho","ervilha","bacon","batata palha"]
+        },
+
+        {
+            nome:"FRANGO",
+            desc:"Pão + salsicha + tomate + milho + ervilha + frango + batata palha",
+            preco:22.00,
+            podeRemover:["salsicha","tomate","milho","ervilha","frango","batata palha"]
+        },
+
+        {
+            nome:"CALABRESA",
+            desc:"Pão + salsicha + tomate + milho + ervilha + calabresa + batata palha",
+            preco:22.00,
+            podeRemover:["salsicha","tomate","milho","ervilha","calabresa","batata palha"]
+        },
+
+        {
+            nome:"CARNE MOIDA",
+            desc:"Pão + salsicha + tomate + milho + ervilha + carne moida + batata palha",
+            preco:22.00,
+            podeRemover:["salsicha","tomate","milho","ervilha","carne moida","batata palha"]
+        },
+
+        {
+            nome:"ESPECIAL",
+            desc:"Pão + salsicha + tomate + milho + ervilha + carne moida + bacon + frango + calabresa + batata palha",
+            preco:35.00,
+            podeRemover:["salsicha","tomate","milho","ervilha","carne moida","bacon","frango","calabresa","batata palha"]
+        }
+    ],
+
+    adicionais_cachorrao: [
+
+        {
+            nome:"Salsicha, ovo, Presunto, mussarela, cheddar ou catupiry",
+            preco:4.00
+        },
+
+        {
+            nome:"Calabresa, Bacon, carne moida, frango",
+            preco:8.00
+        },
+
+        {
+            nome:"Hambúrguer",
+            preco:10.00
+        },
+
+        {
+            nome:"Alcatra ou filé frango",
+            preco:10.00
+        }
+
+    ],
+
+    pizza: [
+
+        {
+            nome:"Palmito",
+            desc:"Mussarela, palmito e tomate",
+            precoP:40.00,
+            precoG:55.00
+        },
+
+        {
+            nome:"Atum",
+            desc:"Atum, mussarela e cebola",
+            precoP:40.00,
+            precoG:55.00
+        },
+
+        {
+            nome:"Lombo",
+            desc:"Catupiry, lombo, mussarela e azeitona",
+            precoP:40.00,
+            precoG:55.00
+        },
+
+        {
+            nome:"Napolitana",
+            desc:"Presunto, mussarela, tomate, azeitona e orégano",
+            precoP:40.00,
+            precoG:55.00
+        },
+
+        {
+            nome:"Marguerita",
+            desc:"Mussarela, manjericão e tomate",
+            precoP:40.00,
+            precoG:55.00
+        },
+
+        {
+            nome:"Pepperoni",
+            desc:"Mussarela, pepperoni e orégano",
+            precoP:40.00,
+            precoG:55.00
+        },
+
+        {
+            nome:"Mussarela",
+            desc:"Molho de tomate, mussarela e orégano",
+            precoP:40.00,
+            precoG:55.00
+        }
+
+    ],
+
+    bebidas: []
+
+};
+
+let cardapio =
+    JSON.parse(localStorage.getItem("baruki_cardapio")) ||
+    JSON.parse(JSON.stringify(cardapioOriginal));
+
+let carrinho = [];
+
+let subtotalItens = 0;
+
+let taxaEntrega = 0;
+
+function aplicarTema(tema) {
+
+    const body = document.body;
+
+    const icone =
+        document.getElementById("icone-tema");
+
+    if (tema === "claro") {
+
+        body.classList.add("tema-claro");
+
+        if (icone) {
+            icone.className = "fa fa-sun-o";
+        }
+
+        localStorage.setItem("baruki_tema","claro");
+
+    } else {
+
+        body.classList.remove("tema-claro");
+
+        if (icone) {
+            icone.className = "fa fa-moon-o";
+        }
+
+        localStorage.setItem("baruki_tema","escuro");
+
+    }
+}
+
+function alternarTema() {
+
+    const temaAtual =
+        document.body.classList.contains("tema-claro")
+        ? "claro"
+        : "escuro";
+
+    aplicarTema(
+        temaAtual === "claro"
+        ? "escuro"
+        : "claro"
+    );
+}
+
+function carregarTema() {
+
+    const temaSalvo =
+        localStorage.getItem("baruki_tema") ||
+        "escuro";
+
+    aplicarTema(temaSalvo);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    carregarTema();
+
+    mostrarCategoria(
+        "lanches",
+        document.querySelector('[data-cat="lanches"]')
+    );
+
+    atualizarContadorCarrinho();
+
+});
+
+function abrirPromo() {
+
+    document
+        .getElementById("modal-promo")
+        .classList.add("show");
+
+    document.body.style.overflow = "hidden";
+}
+
+function fecharPromo() {
+
+    document
+        .getElementById("modal-promo")
+        .classList.remove("show");
+
+    document.body.style.overflow = "";
+}
+
+function fecharPromoFora(e) {
+
+    if (e.target.id === "modal-promo") {
+        fecharPromo();
+    }
+}
+
+function mostrarPopup(texto, tipo = "sucesso") {
+
+    const p =
+        document.getElementById("popup");
+
+    p.textContent = texto;
+
+    p.classList.remove("alerta");
+
+    if (tipo === "alerta") {
+        p.classList.add("alerta");
+    }
+
+    p.classList.add("show");
+
+    setTimeout(() => {
+        p.classList.remove("show");
+    }, 2500);
+}
+
+function mostrarCategoria(cat, btn) {
+
+    document
+        .querySelectorAll(".btn-cat")
+        .forEach(b =>
+            b.classList.remove("active")
+        );
+
+    if (btn) {
+        btn.classList.add("active");
+    }
+
+    const container =
+        document.getElementById("lista-produtos");
+
+    container.innerHTML = "";
+
+    const itens =
+        cardapio[cat] || [];
+
+    if (!itens.length) {
+
+        container.innerHTML = `
+            <p class="text-center text-gray-400 mt-10">
+                Em breve! 🚧
+            </p>
+        `;
+
+        return;
+    }
+
+    if (cat === "pizza") {
+
+        const sabores =
+            itens.map(item => item.nome);
+
+        const divDoisSabores =
+            document.createElement("div");
+
+        divDoisSabores.className =
+            "item-card border-2 border-yellow-500";
+
+        divDoisSabores.innerHTML = `
+
+            <div class="mb-3">
+
+                <h3 class="item-title">
+                    🍕 PIZZA G — 2 SABORES
+                </h3>
+
+                <p class="item-desc">
+                    Escolha dois sabores para montar sua pizza grande.
+                </p>
+
+                <p class="text-xl font-bold text-yellow-400 mt-2">
+                    R$ 55,00
+                </p>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="block font-semibold mb-2">
+                    1º Sabor
+                </label>
+
+                <select class="pizza-sabor-1 input-field">
+
+                    <option value="">
+                        Selecione o primeiro sabor
+                    </option>
+
+                    ${sabores.map(s => `
+                        <option value="${s}">
+                            ${s}
+                        </option>
+                    `).join("")}
+
+                </select>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="block font-semibold mb-2">
+                    2º Sabor
+                </label>
+
+                <select class="pizza-sabor-2 input-field">
+
+                    <option value="">
+                        Selecione o segundo sabor
+                    </option>
+
+                    ${sabores.map(s => `
+                        <option value="${s}">
+                            ${s}
+                        </option>
+                    `).join("")}
+
+                </select>
+
+            </div>
+
+            <div class="mb-3">
+
+                <textarea
+                    placeholder="Observações"
+                    class="input-field text-sm"
+                    rows="2"></textarea>
+
+            </div>
+
+            <div class="flex items-center justify-between">
+
+                <div class="flex items-center gap-3">
+
+                    <button
+                        class="btn-qty"
+                        onclick="mudarQtd(this,-1)">
+                        −
+                    </button>
+
+                    <span class="font-bold text-lg qtd">
+                        1
+                    </span>
+
+                    <button
+                        class="btn-qty"
+                        onclick="mudarQtd(this,1)">
+                        +
+                    </button>
+
+                </div>
+
+                <button
+                    class="btn-add"
+                    onclick="adicionarPizzaDoisSabores(this)">
+                    Adicionar
+                </button>
+
+            </div>
+        `;
+
+        container.appendChild(divDoisSabores);
+
+        itens.forEach((item, idx) => {
+
+            const div =
+                document.createElement("div");
+
+            div.className =
+                "item-card";
+
+            div.innerHTML = `
+
+                <div class="flex justify-between items-start mb-3">
+
+                    <div class="flex-1">
+
+                        <h3 class="item-title">
+                            ${item.nome}
+                        </h3>
+
+                        ${
+                            item.desc
+                            ?
+                            `<p class="item-desc">${item.desc}</p>`
+                            :
+                            ""
+                        }
+
+                        <div class="tamanhos">
+
+                            <span class="preco-p font-bold">
+                                P: R$ ${item.precoP.toFixed(2).replace(".",",")}
+                            </span>
+
+                            <span class="preco-g font-bold">
+                                G: R$ ${item.precoG.toFixed(2).replace(".",",")}
+                            </span>
+
+                        </div>
+
+                        <div class="mt-2 flex gap-4">
+
+                            <label class="text-sm tamanho-label">
+
+                                <input
+                                    type="radio"
+                                    name="tamanho-pizza-${idx}"
+                                    value="P"
+                                    checked>
+
+                                Pequena
+
+                            </label>
+
+                            <label class="text-sm tamanho-label">
+
+                                <input
+                                    type="radio"
+                                    name="tamanho-pizza-${idx}"
+                                    value="G">
+
+                                Grande
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <textarea
+                        placeholder="Observações"
+                        class="input-field text-sm"
+                        rows="2"></textarea>
+
+                </div>
+
+                <div class="flex items-center justify-between">
+
+                    <div class="flex items-center gap-3">
+
+                        <button
+                            class="btn-qty"
+                            onclick="mudarQtd(this,-1)">
+                            −
+                        </button>
+
+                        <span class="font-bold text-lg qtd">
+                            1
+                        </span>
+
+                        <button
+                            class="btn-qty"
+                            onclick="mudarQtd(this,1)">
+                            +
+                        </button>
+
+                    </div>
+
+                    <button
+                        class="btn-add"
+                        onclick="adicionarItem(this,'pizza',${idx})">
+                        Adicionar
+                    </button>
+
+                </div>
+            `;
+
+            container.appendChild(div);
+
+        });
+
+        return;
+    }
+
+    const extras =
+        cat === "cachorrao"
+        ? cardapio.adicionais_cachorrao || []
+        : [];
+
+    itens.forEach((item, idx) => {
+
+        const removerHTML =
+            item.podeRemover?.length
+            ?
+            `
+            <div class="mb-3">
+
+                <p class="font-semibold mb-2 text-sm text-gray-300">
+                    Remover ingredientes:
+                </p>
+
+                <div class="grid gap-1 text-sm">
+
+                    ${item.podeRemover.map(i => `
+
+                        <label class="flex items-center gap-2">
+
+                            <input
+                                type="checkbox"
+                                class="remove-ingred"
+                                value="${i}">
+
+                            <span class="text-red-400">
+                                − ${i}
+                            </span>
+
+                        </label>
+
+                    `).join("")}
+
+                </div>
+
+            </div>
+            `
+            :
+            "";
+
+        const adicionaisHTML =
+            extras.length
+            ?
+            `
+            <div class="mb-3">
+
+                <p class="font-semibold mb-2 text-sm text-gray-300">
+                    Adicionais:
+                </p>
+
+                <div class="grid gap-1 text-sm text-gray-200">
+
+                    ${extras.map(a => `
+
+                        <label class="flex items-center gap-2">
+
+                            <input
+                                type="checkbox"
+                                class="add-ingred"
+                                data-nome="${a.nome}"
+                                data-valor="${a.preco}">
+
+                            <span>
+
+                                + ${a.nome}
+
+                                <span class="text-success">
+                                    +R$ ${a.preco.toFixed(2).replace(".",",")}
+                                </span>
+
+                            </span>
+
+                        </label>
+
+                    `).join("")}
+
+                </div>
+
+            </div>
+            `
+            :
+            "";
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "item-card";
+
+        div.innerHTML = `
+
+            <div class="mb-3">
+
+                <h3 class="item-title">
+                    ${item.nome}
+                </h3>
+
+                ${
+                    item.desc
+                    ?
+                    `<p class="item-desc">${item.desc}</p>`
+                    :
+                    ""
+                }
+
+                ${
+                    item.preco !== undefined
+                    ?
+                    `
+                    <p class="text-xl font-bold text-success mt-2">
+                        R$ ${item.preco.toFixed(2).replace(".",",")}
+                    </p>
+                    `
+                    :
+                    ""
+                }
+
+            </div>
+
+            ${removerHTML}
+
+            ${adicionaisHTML}
+
+            <div class="mb-3">
+
+                <textarea
+                    placeholder="Observações (ex: sem cebola...)"
+                    class="input-field text-sm"
+                    rows="2"></textarea>
+
+            </div>
+
+            <div class="flex items-center justify-between">
+
+                <div class="flex items-center gap-3">
+
+                    <button
+                        class="btn-qty"
+                        onclick="mudarQtd(this,-1)">
+                        −
+                    </button>
+
+                    <span class="font-bold text-lg qtd">
+                        1
+                    </span>
+
+                    <button
+                        class="btn-qty"
+                        onclick="mudarQtd(this,1)">
+                        +
+                    </button>
+
+                </div>
+
+                <button
+                    class="btn-add"
+                    onclick="adicionarItem(this,'${cat}',${idx})">
+                    Adicionar
+                </button>
+
+            </div>
+        `;
+
+        container.appendChild(div);
+
+    });
+}
+
+function mudarQtd(el, delta) {
+
+    const span =
+        el.parentElement.querySelector(".qtd");
+
+    let qtd =
+        parseInt(span.textContent) + delta;
+
+    if (qtd < 1) {
+        qtd = 1;
+    }
+
+    span.textContent = qtd;
+}
+
+function adicionarItem(botao, cat, idx) {
+
+    const item =
+        cardapio[cat][idx];
+
+    const card =
+        botao.closest(".item-card");
+
+    const qtd =
+        parseInt(
+            card.querySelector(".qtd").textContent
+        );
+
+    const obs =
+        card.querySelector("textarea")?.value.trim() || "";
+
+    const adicionais =
+        Array.from(
+            card.querySelectorAll(".add-ingred:checked")
+        ).map(c => ({
+            nome: c.dataset.nome,
+            valor: +c.dataset.valor
+        }));
+
+    const removidos =
+        Array.from(
+            card.querySelectorAll(".remove-ingred:checked")
+        ).map(c => c.value);
+
+    let precoUnit;
+
+    let tamanho = "";
+
+    if (item.precoP !== undefined) {
+
+        const radio =
+            card.querySelector(
+                `input[name="tamanho-pizza-${idx}"]:checked`
+            );
+
+        const tam =
+            radio ? radio.value : "P";
+
+        tamanho =
+            ` (${tam})`;
+
+        precoUnit =
+            tam === "P"
+            ? item.precoP
+            : item.precoG;
+
+    } else {
+
+        precoUnit =
+            item.preco;
+    }
+
+    const valorAdicionais =
+        adicionais.reduce(
+            (s,a) => s + a.valor,
+            0
+        );
+
+    carrinho.push({
+
+        id:
+            Date.now() + Math.random(),
+
+        nome:
+            item.nome + tamanho,
+
+        precoUnit:
+            precoUnit + valorAdicionais,
+
+        qtd,
+
+        adicionais,
+
+        removidos,
+
+        obs
+
+    });
+
+    mostrarPopup(
+        "Item adicionado ✅"
+    );
+
+    atualizarContadorCarrinho();
+
+    atualizarTelaCarrinho();
+}
+
+function adicionarPizzaDoisSabores(botao) {
+
+    const card =
+        botao.closest(".item-card");
+
+    const sabor1 =
+        card.querySelector(".pizza-sabor-1").value;
+
+    const sabor2 =
+        card.querySelector(".pizza-sabor-2").value;
+
+    const obs =
+        card.querySelector("textarea").value.trim();
+
+    const qtd =
+        parseInt(
+            card.querySelector(".qtd").textContent
+        );
+
+    if (!sabor1) {
+
+        mostrarPopup(
+            "⚠️ Escolha o primeiro sabor!",
+            "alerta"
+        );
+
+        return;
+    }
+
+    if (!sabor2) {
+
+        mostrarPopup(
+            "⚠️ Escolha o segundo sabor!",
+            "alerta"
+        );
+
+        return;
+    }
+
+    carrinho.push({
+
+        id:
+            Date.now() + Math.random(),
+
+        nome:
+            `PIZZA G 2 SABORES — ${sabor1} + ${sabor2}`,
+
+        precoUnit:
+            55.00,
+
+        qtd,
+
+        adicionais: [],
+
+        removidos: [],
+
+        obs,
+
+        pizzaDoisSabores: true,
+
+        sabor1,
+
+        sabor2
+
+    });
+
+    mostrarPopup(
+        "Pizza de 2 sabores adicionada 🍕✅"
+    );
+
+    atualizarContadorCarrinho();
+
+    atualizarTelaCarrinho();
+}
+
+function atualizarContadorCarrinho() {
+
+    document.getElementById("cart-count").textContent =
+        carrinho.reduce(
+            (s,i) => s + i.qtd,
+            0
+        );
+}
+
+function atualizarTelaCarrinho() {
+
+    const container =
+        document.getElementById("itens-carrinho");
+
+    const btnCont =
+        document.getElementById("btn-continuar");
+
+    if (!carrinho.length) {
+
+        container.innerHTML = `
+
+            <p class="text-center text-gray-400 py-10">
+                Seu carrinho está vazio 😕
+            </p>
+
+        `;
+
+        btnCont.disabled = true;
+
+        btnCont.className =
+            "btn-action bg-gray-600 mt-4";
+
+        calcularValores();
+
+        return;
+    }
+
+    btnCont.disabled = false;
+
+    btnCont.className =
+        "btn-action bg-secondary hover:bg-secondary/90 mt-4";
+
+    container.innerHTML =
+        carrinho.map((item,pos) => `
+
+            <div class="bg-gray-800 p-4 rounded-xl shadow mb-3">
+
+                <div class="flex justify-between font-bold text-white">
+
+                    <span>
+                        ${item.nome}
+                    </span>
+
+                    <span>
+                        R$ ${(item.precoUnit * item.qtd)
+                            .toFixed(2)
+                            .replace(".",",")}
+                    </span>
+
+                </div>
+
+                <p class="text-sm text-gray-300">
+                    Qtd: ${item.qtd}
+                </p>
+
+                ${
+                    item.pizzaDoisSabores
+                    ?
+                    `
+                    <p class="text-sm text-yellow-400 mt-1">
+                        🍕 Sabores:
+                        ${item.sabor1} + ${item.sabor2}
+                    </p>
+                    `
+                    :
+                    ""
+                }
+
+                ${
+                    item.adicionais.length
+                    ?
+                    `
+                    <p class="text-sm text-gray-300">
+                        Adicionais:
+                        ${item.adicionais.map(a=>a.nome).join(", ")}
+                    </p>
+                    `
+                    :
+                    ""
+                }
+
+                ${
+                    item.removidos.length
+                    ?
+                    `
+                    <p class="text-sm text-red-400">
+                        ✖ Removidos:
+                        ${item.removidos.join(", ")}
+                    </p>
+                    `
+                    :
+                    ""
+                }
+
+                ${
+                    item.obs
+                    ?
+                    `
+                    <p class="text-sm italic text-gray-300">
+                        Obs: ${item.obs}
+                    </p>
+                    `
+                    :
+                    ""
+                }
+
+                <button
+                    onclick="removerItem(${pos})"
+                    class="text-red-400 text-sm mt-2">
+                    Remover
+                </button>
+
+            </div>
+
+        `).join("");
+
+    calcularValores();
+}
+
+function removerItem(pos) {
+
+    carrinho.splice(pos,1);
+
+    atualizarContadorCarrinho();
+
+    atualizarTelaCarrinho();
+}
+
+function calcularValores() {
+
+    subtotalItens =
+        carrinho.reduce(
+            (s,i) =>
+                s + i.precoUnit * i.qtd,
+            0
+        );
+
+    const total =
+        subtotalItens + taxaEntrega;
+
+    document.getElementById("subtotal").textContent =
+        `R$ ${subtotalItens.toFixed(2).replace(".",",")}`;
+
+    document.getElementById("valor-entrega").textContent =
+        taxaEntrega
+        ?
+        `R$ ${taxaEntrega.toFixed(2).replace(".",",")}`
+        :
+        "Grátis";
+
+    document.getElementById("valor-total").textContent =
+        `R$ ${total.toFixed(2).replace(".",",")}`;
+
+    document.getElementById("res-subtotal").textContent =
+        `R$ ${subtotalItens.toFixed(2).replace(".",",")}`;
+
+    document.getElementById("res-entrega").textContent =
+        taxaEntrega
+        ?
+        `R$ ${taxaEntrega.toFixed(2).replace(".",",")}`
+        :
+        "Grátis";
+
+    document.getElementById("res-total").textContent =
+        `R$ ${total.toFixed(2).replace(".",",")}`;
+
+    validarFinalizar();
+}
+
+function showScreen(tela) {
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(el =>
+            el.classList.remove("active")
+        );
+
+    const destino =
+        document.getElementById(`tela-${tela}`);
+
+    if (destino) {
+        destino.classList.add("active");
+    }
+
+    document.getElementById("btn-voltar").style.display =
+        tela === "cardapio"
+        ? "none"
+        : "inline";
+
+    if (tela === "carrinho") {
+        atualizarTelaCarrinho();
+    }
+
+    if (tela === "pagamento") {
+        calcularValores();
+    }
+}
+
+function atualizarPagamento() {
+
+    const pgto =
+        document.querySelector(
+            'input[name="pagamento"]:checked'
+        ).value;
+
+    document
+        .getElementById("campo-troco")
+        .classList.toggle(
+            "hidden",
+            pgto !== "Dinheiro"
+        );
+
+    calcularTroco();
+
+    validarFinalizar();
+}
+
+function calcularTroco() {
+
+    const recebido =
+        parseFloat(
+            document.getElementById("valor-recebido").value
+        ) || 0;
+
+    const total =
+        subtotalItens + taxaEntrega;
+
+    const troco =
+        recebido - total >= 0
+        ?
+        recebido - total
+        :
+        0;
+
+    document.getElementById("valor-troco").textContent =
+        `R$ ${troco.toFixed(2).replace(".",",")}`;
+}
+
+function atualizarEntrega() {
+
+    const entrega =
+        document.querySelector(
+            'input[name="entrega"]:checked'
+        ).value;
+
+    taxaEntrega =
+        entrega === "Floriano"
+        ?
+        5
+        :
+        entrega === "Nova Floresta"
+        ?
+        10
+        :
+        0;
+
+    /*
+     * CORREÇÃO:
+     * Ao escolher Retirada, o endereço deixa de ser obrigatório.
+     */
+    const campoEndereco =
+        document.getElementById("cliente-endereco");
+
+    if (entrega === "Retirada") {
+
+        campoEndereco.placeholder =
+            "Endereço não necessário para retirada";
+
+        campoEndereco.classList.remove("invalido");
+
+    } else {
+
+        campoEndereco.placeholder =
+            "Endereço completo";
+
+    }
+
+    calcularValores();
+}
+
+function validarFinalizar() {
+
+    const nome =
+        document.getElementById("cliente-nome").value.trim();
+
+    const endereco =
+        document.getElementById("cliente-endereco").value.trim();
+
+    const entregaSelecionada =
+        document.querySelector(
+            'input[name="entrega"]:checked'
+        );
+
+    const entrega =
+        entregaSelecionada
+        ? entregaSelecionada.value
+        : "Retirada";
+
+    const temItens =
+        carrinho.length > 0;
+
+    const btn =
+        document.getElementById("btn-finalizar");
+
+    /*
+     * CORREÇÃO:
+     * Retirada no local:
+     * - Nome obrigatório
+     * - Endereço NÃO obrigatório
+     *
+     * Entrega:
+     * - Nome obrigatório
+     * - Endereço obrigatório
+     */
+
+    const enderecoObrigatorio =
+        entrega !== "Retirada";
+
+    btn.disabled =
+        !(nome &&
+          temItens &&
+          (!enderecoObrigatorio || endereco));
+
+    btn.className =
+        btn.disabled
+        ?
+        "btn-action bg-gray-600"
+        :
+        "btn-action bg-primary hover:bg-primary/90";
+}
+
+function enviarWhatsApp() {
+
+    document
+        .querySelectorAll(".input-field")
+        .forEach(el =>
+            el.classList.remove("invalido")
+        );
+
+    const pgto =
+        document.querySelector(
+            'input[name="pagamento"]:checked'
+        ).value;
+
+    const entrega =
+        document.querySelector(
+            'input[name="entrega"]:checked'
+        ).value;
+
+    const nome =
+        document
+            .getElementById("cliente-nome")
+            .value.trim();
+
+    const endereco =
+        document
+            .getElementById("cliente-endereco")
+            .value.trim();
+
+    const recebidoEl =
+        document.getElementById("valor-recebido");
+
+    const recebido =
+        recebidoEl?.value || "";
+
+    if (!carrinho.length) {
+
+        mostrarPopup(
+            "⚠️ Adicione itens ao carrinho antes de finalizar!",
+            "alerta"
+        );
+
+        showScreen("cardapio");
+
+        return;
+    }
+
+    if (!nome) {
+
+        mostrarPopup(
+            "⚠️ Preencha o nome completo!",
+            "alerta"
+        );
+
+        document
+            .getElementById("cliente-nome")
+            .classList.add("invalido");
+
+        return;
+    }
+
+    /*
+     * CORREÇÃO:
+     * O endereço somente é exigido quando for entrega.
+     */
+    if (entrega !== "Retirada" && !endereco) {
+
+        mostrarPopup(
+            "⚠️ Preencha o endereço completo!",
+            "alerta"
+        );
+
+        document
+            .getElementById("cliente-endereco")
+            .classList.add("invalido");
+
+        return;
+    }
+
+    if (
+        pgto === "Dinheiro" &&
+        (!recebido || parseFloat(recebido) <= 0)
+    ) {
+
+        mostrarPopup(
+            "⚠️ Informe o valor recebido para pagamento em dinheiro!",
+            "alerta"
+        );
+
+        recebidoEl.classList.add("invalido");
+
+        return;
+    }
+
+    const totalGeral =
+        subtotalItens + taxaEntrega;
+
+    let msg =
+        `◆ *PEDIDO LANCHONETE BARUKI* ◆\n\n`;
+
+    msg +=
+        `◆ *Cliente:* ${nome}\n`;
+
+    /*
+     * Para retirada, não envia uma linha de endereço vazia.
+     */
+    if (entrega === "Retirada") {
+
+        msg +=
+            `◆ *Endereço:* Retirada no local\n`;
+
+    } else {
+
+        msg +=
+            `◆ *Endereço:* ${endereco}\n`;
+
+    }
+
+    msg +=
+        `◆ *Entrega:* ${entrega} (R$ ${taxaEntrega.toFixed(2).replace(".",",")})\n`;
+
+    msg +=
+        `◆ *Pagamento:* ${pgto}\n`;
+
+    if (pgto === "Dinheiro") {
+
+        msg +=
+            `◆ *Valor recebido:* R$ ${parseFloat(recebido).toFixed(2).replace(".",",")}\n`;
+
+        msg +=
+            `◆ *Troco:* R$ ${(parseFloat(recebido) - totalGeral).toFixed(2).replace(".",",")}\n`;
+    }
+
+    msg +=
+        `\n◆ *Itens:*\n`;
+
+    carrinho.forEach(i => {
+
+        msg +=
+            `• ${i.qtd}x ${i.nome} - R$ ${(i.precoUnit * i.qtd).toFixed(2).replace(".",",")}\n`;
+
+        if (i.pizzaDoisSabores) {
+
+            msg +=
+                `   ↳ *Pizza G - 2 sabores:* ${i.sabor1} + ${i.sabor2}\n`;
+        }
+
+        if (i.adicionais.length) {
+
+            msg +=
+                `   ↳ Adicionais: ${i.adicionais.map(a=>a.nome).join(", ")}\n`;
+        }
+
+        if (i.removidos.length) {
+
+            msg +=
+                `   ↳ Removidos: ${i.removidos.join(", ")}\n`;
+        }
+
+        if (i.obs) {
+
+            msg +=
+                `   ↳ Obs: ${i.obs}\n`;
+        }
+
+    });
+
+    msg +=
+        `\n◆ *Resumo:*\n`;
+
+    msg +=
+        `• Subtotal: R$ ${subtotalItens.toFixed(2).replace(".",",")}\n`;
+
+    msg +=
+        `• Entrega: R$ ${taxaEntrega.toFixed(2).replace(".",",")}\n`;
+
+    msg +=
+        `★ *TOTAL: R$ ${totalGeral.toFixed(2).replace(".",",")}*`;
+
+    const numero =
+        "5544997232744";
+
+    window.open(
+        `https://wa.me/${numero}?text=${encodeURIComponent(msg)}`,
+        "_blank"
+    );
+}
+
+</script>
+
+</body>
+</html>
